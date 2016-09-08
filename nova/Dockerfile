@@ -1,0 +1,37 @@
+FROM openstack/base
+MAINTAINER Shuquan Huang
+
+# nova-base
+RUN apt-get update && apt-get install -y --no-install-recommends \
+                   iptables \
+                   ebtables \
+                   dnsmasq \
+                   bridge-utils \
+                   python-libvirt \
+                   openssh-client \
+                   openvswitch-switch
+
+# nova-compute
+RUN apt-get update && apt-get install -y --no-install-recommends \
+                   libvirt-dev \
+                   qemu-utils \
+                   genisoimage \
+                   open-iscsi \
+                   targetcli \
+                   python-rtslib
+
+# nova-libvirt
+RUN apt-get update && apt-get -y install --no-install-recommends \ 
+                   libvirt-bin \
+                   dmidecode \
+                   pm-utils \
+                   qemu \
+                   ebtables
+
+RUN mkdir -p /opt/stack \
+    && cd /opt/stack \
+    && git clone https://git.openstack.org/openstack/nova
+
+WORKDIR /opt/stack/nova
+
+RUN pip install .
