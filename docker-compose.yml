@@ -6,12 +6,13 @@ services:
             - "35357:35357"
             - "5000:5000"
         volumes:
-            - etc/keystone:/etc/keystone
+            - ./etc/keystone:/etc/keystone
+            - ./log/keystone:/var/log/apache2
+        restart: always
         depends_on:
             - keystone_db
         links:
             - keystone_db
-        restart: always
         environment:
             MYSQL_DATABASE: keystone
             MYSQL_USER: keystone
