@@ -7,4 +7,18 @@ RUN mkdir -p /opt/stack \
 
 WORKDIR /opt/stack/glance
 
-RUN pip install .
+RUN useradd --user-group glance \
+    && pip --no-cache-dir install . \ 
+    && pip --no-cache-dir install pymysql \ 
+    && mkdir -p /etc/glance /var/lib/glance /var/log/glance /home/glance \
+    && chown -R glance: /etc/glance /var/lib/glance /var/log/glance /home/glance
+
+RUN apt-get update && apt-get install -y supervisor \
+                   && mkdir -p /var/log/supervisor
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+EXPOSE 9292 9191
+
+CMD /usr/local/bin/glance-manage db_sync \
+    && /usr/bin/supervisord

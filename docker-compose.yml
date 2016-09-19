@@ -1,6 +1,10 @@
 version: '2'
 services:
+    openstackclient:
+        build: ./openstackclient
+        image: openstack/openstackclient
     keystone:
+        build: ./keystone
         image: openstack/keystone
         ports:
             - "35357:35357"
@@ -13,17 +17,32 @@ services:
             - keystone_db
         links:
             - keystone_db
-        environment:
-            MYSQL_DATABASE: keystone
-            MYSQL_USER: keystone
-            MYSQL_PASSWORD: password
     keystone_db:
         image: mysql
-        volumes:
-            - "./.data/keystone_db:/var/lib/mysql"
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: password
             MYSQL_DATABASE: keystone
             MYSQL_USER: keystone
+            MYSQL_PASSWORD: password
+    glance:
+        build: ./glance
+        image: openstack/glance
+        ports:
+            - "9292:9292"
+        volumes:
+            - ./etc/glance:/etc/glance
+            - ./log/glance:/var/log/glance
+        restart: always
+        depends_on:
+            - glance_db
+        links:
+            - glance_db
+    glance_db:
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: glance
+            MYSQL_USER: glance
             MYSQL_PASSWORD: password

@@ -6,13 +6,16 @@ USERNAME=$1
 PASSWORD=password
 PROJECT=$3
 ROLE=$4
-ADMIN_URL=http://keystone:35357/v3
-INTERNAL_URL=http://keystone:5000/v3
-PUBLIC_URL=http://keystone:5000/v3
+KEYSTONE_ADMIN_URL=http://keystone:35357/v3
+KEYSTONE_INTERNAL_URL=http://keystone:5000/v3
+KEYSTONE_PUBLIC_URL=http://keystone:5000/v3
+GLANCE_ADMIN_URL=http://glance:9292
+GLANCE_INTERNAL_URL=http://glance:9292
+GLANCE_PUBLIC_URL=http://glance:9292
 REGION=RegionOne
 
 export OS_TOKEN=ADMIN_TOKEN
-export OS_URL=$ADMIN_URL
+export OS_URL=$KEYSTONE_ADMIN_URL
 export OS_IDENTITY_API_VERSION=3
 
 # Create the service entity and API endpoints
@@ -20,13 +23,13 @@ openstack service create \
 --name keystone --description "OpenStack Identity" identity
 
 openstack endpoint create --region $REGION \
-identity public $PUBLIC_URL
+identity public $KEYSTONE_PUBLIC_URL
 
 openstack endpoint create --region $REGION \
-identity internal $INTERNAL_URL
+identity internal $KEYSTONE_INTERNAL_URL
 
 openstack endpoint create --region $REGION \
-identity admin $ADMIN_URL
+identity admin $KEYSTONE_ADMIN_URL
 
 # Create a domain, projects, users, and roles
 # Create the default domain
@@ -75,11 +78,14 @@ openstack service create --name glance \
 
 # Create the Image service API endpoints
 openstack endpoint create --region RegionOne \
-image public $PUBLIC_URL
+image public $GLANCE_PUBLIC_URL
 
 openstack endpoint create --region RegionOne \
-image internal $INTERNAL_URL
+image internal $GLANCE_INTERNAL_URL
 
 openstack endpoint create --region RegionOne \
-image admin $ADMIN_URL
+image admin $GLANCE_ADMIN_URL
 
+unset OS_TOKEN OS_URL
+
+set +x
