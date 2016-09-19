@@ -29,27 +29,57 @@ openstack endpoint create --region $REGION \
 identity admin $ADMIN_URL
 
 # Create a domain, projects, users, and roles
+# Create the default domain
 openstack domain create --description "Default Domain" default
 
+# Create the admin project
 openstack project create --domain default \
 --description "Admin Project" admin
 
+# Create the admin user
 openstack user create --domain default \
 --password $PASSWORD admin
 
+# Create the admin role
 openstack role create admin
 
+# Add the admin role to the admin project and user
 openstack role add --project admin --user admin admin
 
+# Create the service project
 openstack project create --domain default \
 --description "Service Project" service
 
+# Create the demo project
 openstack project create --domain default \
 --description "Demo Project" demo
 
+# Create the demo user
 openstack user create --domain default \
 --password $PASSWORD demo
 
+# Create the user role
 openstack role create user
 
+# Add the user role to the demo project and user
 openstack role add --project demo --user demo user
+
+# Create the glance user
+openstack user create --domain default --password password glance
+
+openstack role add --project service --user glance admin
+
+# Create the glance service entity
+openstack service create --name glance \
+--description "OpenStack Image" image
+
+# Create the Image service API endpoints
+openstack endpoint create --region RegionOne \
+image public $PUBLIC_URL
+
+openstack endpoint create --region RegionOne \
+image internal $INTERNAL_URL
+
+openstack endpoint create --region RegionOne \
+image admin $ADMIN_URL
+
