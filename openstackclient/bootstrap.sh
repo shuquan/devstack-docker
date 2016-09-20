@@ -12,6 +12,9 @@ KEYSTONE_PUBLIC_URL=http://keystone:5000/v3
 GLANCE_ADMIN_URL=http://glance:9292
 GLANCE_INTERNAL_URL=http://glance:9292
 GLANCE_PUBLIC_URL=http://glance:9292
+NOVA_ADMIN_URL=http://nova:8774/v2.1/%\(tenant_id\)s
+NOVA_INTERNAL_URL=http://nova:8774/v2.1/%\(tenant_id\)s
+NOVA_PUBLIC_URL=http://nova:8774/v2.1/%\(tenant_id\)s
 REGION=RegionOne
 
 export OS_TOKEN=ADMIN_TOKEN
@@ -68,7 +71,7 @@ openstack role create user
 openstack role add --project demo --user demo user
 
 # Create the glance user
-openstack user create --domain default --password password glance
+openstack user create --domain default --password $PASSWORD glance
 
 openstack role add --project service --user glance admin
 
@@ -85,6 +88,27 @@ image internal $GLANCE_INTERNAL_URL
 
 openstack endpoint create --region RegionOne \
 image admin $GLANCE_ADMIN_URL
+
+# Create the nova user
+openstack user create --domain default \
+--password $PASSWORD nova
+
+# Add the admin role to the nova user
+openstack role add --project service --user nova admin
+
+# Create the nova service entity
+openstack service create --name nova \
+--description "OpenStack Compute" compute
+
+# Create the Compute service API endpoints
+openstack endpoint create --region RegionOne \
+compute public $NOVA_PUBLIC_URL
+
+openstack endpoint create --region RegionOne \
+compute internal $NOVA_INTERNAL_URL
+
+openstack endpoint create --region RegionOne \
+compute admin $NOVA_ADMIN_URL
 
 unset OS_TOKEN OS_URL
 
