@@ -32,6 +32,25 @@ RUN mkdir -p /opt/stack \
     && cd /opt/stack \
     && git clone https://git.openstack.org/openstack/nova
 
+RUN git clone https://github.com/kanaka/noVNC /usr/share/novnc
+
+# supervisor
+RUN apt-get update && apt-get -y install --no-install-recommends supervisor \
+                   && mkdir -p /var/log/supervisor
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+EXPOSE 8774
+
 WORKDIR /opt/stack/nova
 
-RUN pip install .
+RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
+    && chmod 755 /var/lib/nova \
+    && pip --no-cache-dir install . \
+    && pip --no-cache-dir install pymysql \
+    && mkdir -p /etc/nova /var/lib/nova \
+    && chown -R nova: /etc/nova /var/lib/nova
+
+CMD /usr/local/bin/nova-manage api_db sync \
+    && /usr/local/bin/nova-manage db sync \
+    && /usr/bin/supervisord

@@ -49,18 +49,24 @@ services:
     nova:
         build: ./nova
         image: openstack/nova
+        privileged: true
         ports:
             - "8774:8774"
         volumes:
             - ./etc/nova:/etc/nova
             - ./log/nova:/var/log/nova
+        networks:
+            default:
+                ipv4_address: 172.18.0.10
         restart: always
         depends_on:
             - nova_db
             - nova_api_db
+            - nova_rabbitmq
         links:
             - nova_db
             - nova_api_db
+            - nova_rabbitmq
     nova_db:
         image: mysql
         restart: always
@@ -77,3 +83,9 @@ services:
             MYSQL_DATABASE: nova_api
             MYSQL_USER: nova_api
             MYSQL_PASSWORD: password
+    nova_rabbitmq:
+        image: rabbitmq
+        restart: always
+        environment:
+            RABBITMQ_DEFAULT_USER: nova
+            RABBITMQ_DEFAULT_PASS: password
