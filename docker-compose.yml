@@ -89,3 +89,32 @@ services:
         environment:
             RABBITMQ_DEFAULT_USER: nova
             RABBITMQ_DEFAULT_PASS: password
+    neutron:
+        build: ./neutron
+        image: openstack/neutron
+        ports:
+            - "9696:9696"
+        volumes:
+            - ./etc/neutron:/etc/neutron
+            - ./log/neutron:/var/log/neutron
+        restart: always
+        depends_on:
+            - neutron_db
+            - neutron_rabbitmq
+        links:
+            - neutron_db
+            - neutron_rabbitmq
+    neutron_db:
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: neutron
+            MYSQL_USER: neutron
+            MYSQL_PASSWORD: password
+    neutron_rabbitmq:
+        image: rabbitmq
+        restart: always
+        environment:
+            RABBITMQ_DEFAULT_USER: neutron
+            RABBITMQ_DEFAULT_PASS: password
