@@ -15,6 +15,9 @@ GLANCE_PUBLIC_URL=http://glance:9292
 NOVA_ADMIN_URL=http://nova:8774/v2.1/%\(tenant_id\)s
 NOVA_INTERNAL_URL=http://nova:8774/v2.1/%\(tenant_id\)s
 NOVA_PUBLIC_URL=http://nova:8774/v2.1/%\(tenant_id\)s
+NEUTRON_ADMIN_URL=http://neutron:9696
+NEUTRON_INTERNAL_URL=http://neutron:9696
+NEUTRON_PUBLIC_URL=http://neutron:9696
 REGION=RegionOne
 
 export OS_TOKEN=ADMIN_TOKEN
@@ -109,6 +112,26 @@ compute internal $NOVA_INTERNAL_URL
 
 openstack endpoint create --region RegionOne \
 compute admin $NOVA_ADMIN_URL
+
+# Create the neutron user
+openstack user create --domain default --password $PASSWORD neutron
+
+# Add the admin role to the neutron user
+openstack role add --project service --user neutron admin
+
+# Create the neutron service entity
+openstack service create --name neutron \
+--description "OpenStack Networking" network
+
+# Create the Networking service API endpoints
+openstack endpoint create --region RegionOne \
+network public $NEUTRON_PUBLIC_URL
+
+openstack endpoint create --region RegionOne \
+network internal $NEUTRON_INTERNAL_URL
+
+openstack endpoint create --region RegionOne \
+network admin $NEUTRON_ADMIN_URL
 
 unset OS_TOKEN OS_URL
 
