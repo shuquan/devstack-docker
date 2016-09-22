@@ -57,7 +57,7 @@ services:
             - ./log/nova:/var/log/nova
         networks:
             default:
-                ipv4_address: 172.18.0.10
+                ipv4_address: 172.18.0.100
         restart: always
         depends_on:
             - nova_db
@@ -92,11 +92,15 @@ services:
     neutron:
         build: ./neutron
         image: openstack/neutron
+        privileged: true
         ports:
             - "9696:9696"
         volumes:
             - ./etc/neutron:/etc/neutron
             - ./log/neutron:/var/log/neutron
+        networks:
+            default:
+                ipv4_address: 172.18.0.20
         restart: always
         depends_on:
             - neutron_db

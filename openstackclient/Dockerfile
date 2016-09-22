@@ -1,7 +1,8 @@
 FROM openstack/base
 MAINTAINER Shuquan Huang
 
-RUN apt-get update && pip install python-openstackclient
+RUN apt-get update && pip install python-openstackclient \
+                   && pip install python-neutronclient
 
 WORKDIR /root
 
