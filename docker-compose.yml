@@ -55,6 +55,8 @@ services:
         volumes:
             - ./etc/controller/nova:/etc/nova
             - ./log/controller/nova:/var/log/nova
+            - ./etc/controller/neutron:/etc/neutron
+            - ./log/controller/neutron:/var/log/neutron
         networks:
             default:
                 ipv4_address: 172.18.0.100

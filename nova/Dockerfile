@@ -43,6 +43,33 @@ RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && mkdir -p /etc/nova /var/lib/nova/instances \
     && chown -R nova: /etc/nova /var/lib/nova
 
+# neutron-base
+RUN apt-get update && apt-get -y install --no-install-recommends \
+                   iputils-arping \
+                   conntrack \
+                   dnsmasq \
+                   dnsmasq-utils \
+                   ipset \
+                   iptables \
+                   openvswitch-switch \
+                   python-openvswitch \
+                   uuid-runtime
+
+RUN mkdir -p /opt/stack \
+    && cd /opt/stack \
+    && git clone https://git.openstack.org/openstack/neutron
+
+WORKDIR /opt/stack/neutron
+
+RUN useradd --user-group neutron \
+    && pip --no-cache-dir install . \
+    && pip --no-cache-dir install pymysql \
+    && mkdir -p /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron \
+    && chown -R neutron: /etc/neutron /usr/share/neutron /var/lib/neutron /home/neutron
+
+# neutron-linuxbridge-agent
+RUN apt-get update && apt-get -y install --no-install-recommends \
+                   ebtables
 # supervisor
 RUN apt-get update && apt-get -y install --no-install-recommends supervisor \
                    && mkdir -p /var/log/supervisor
