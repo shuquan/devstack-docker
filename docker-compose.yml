@@ -3,7 +3,7 @@ services:
     openstackclient:
         build: ./openstackclient
         image: openstack/openstackclient
-    keystone:
+    identity:
         build: ./keystone
         image: openstack/keystone
         ports:
@@ -14,10 +14,10 @@ services:
             - ./log/identity/keystone:/var/log/apache2
         restart: always
         depends_on:
-            - keystone_db
+            - identity_db
         links:
-            - keystone_db
-    keystone_db:
+            - identity_db
+    identity_db:
         image: mysql
         restart: always
         environment:
