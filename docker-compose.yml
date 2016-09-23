@@ -25,7 +25,7 @@ services:
             MYSQL_DATABASE: keystone
             MYSQL_USER: keystone
             MYSQL_PASSWORD: password
-    glance:
+    image:
         build: ./glance
         image: openstack/glance
         ports:
@@ -35,10 +35,10 @@ services:
             - ./log/image/glance:/var/log/glance
         restart: always
         depends_on:
-            - glance_db
+            - image_db
         links:
-            - glance_db
-    glance_db:
+            - image_db
+    image_db:
         image: mysql
         restart: always
         environment:
