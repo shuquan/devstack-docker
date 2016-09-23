@@ -10,8 +10,8 @@ services:
             - "35357:35357"
             - "5000:5000"
         volumes:
-            - ./etc/keystone:/etc/keystone
-            - ./log/keystone:/var/log/apache2
+            - ./etc/identity/keystone:/etc/keystone
+            - ./log/identity/keystone:/var/log/apache2
         restart: always
         depends_on:
             - keystone_db
@@ -31,8 +31,8 @@ services:
         ports:
             - "9292:9292"
         volumes:
-            - ./etc/glance:/etc/glance
-            - ./log/glance:/var/log/glance
+            - ./etc/image/glance:/etc/glance
+            - ./log/image/glance:/var/log/glance
         restart: always
         depends_on:
             - glance_db
@@ -53,8 +53,8 @@ services:
         ports:
             - "8774:8774"
         volumes:
-            - ./etc/nova:/etc/nova
-            - ./log/nova:/var/log/nova
+            - ./etc/controller/nova:/etc/nova
+            - ./log/controller/nova:/var/log/nova
         networks:
             default:
                 ipv4_address: 172.18.0.100
@@ -96,8 +96,8 @@ services:
         ports:
             - "9696:9696"
         volumes:
-            - ./etc/neutron:/etc/neutron
-            - ./log/neutron:/var/log/neutron
+            - ./etc/network/neutron:/etc/neutron
+            - ./log/network/neutron:/var/log/neutron
         networks:
             default:
                 ipv4_address: 172.18.0.20
