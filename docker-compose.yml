@@ -46,7 +46,7 @@ services:
             MYSQL_DATABASE: glance
             MYSQL_USER: glance
             MYSQL_PASSWORD: password
-    nova:
+    controller:
         build: ./nova
         image: openstack/nova
         privileged: true
@@ -60,14 +60,14 @@ services:
                 ipv4_address: 172.18.0.100
         restart: always
         depends_on:
-            - nova_db
-            - nova_api_db
-            - nova_rabbitmq
+            - controller_db
+            - controller_api_db
+            - controller_rabbitmq
         links:
-            - nova_db
-            - nova_api_db
-            - nova_rabbitmq
-    nova_db:
+            - controller_db
+            - controller_api_db
+            - controller_rabbitmq
+    controller_db:
         image: mysql
         restart: always
         environment:
@@ -75,7 +75,7 @@ services:
             MYSQL_DATABASE: nova
             MYSQL_USER: nova
             MYSQL_PASSWORD: password
-    nova_api_db:
+    controller_api_db:
         image: mysql
         restart: always
         environment:
@@ -83,7 +83,7 @@ services:
             MYSQL_DATABASE: nova_api
             MYSQL_USER: nova_api
             MYSQL_PASSWORD: password
-    nova_rabbitmq:
+    controller_rabbitmq:
         image: rabbitmq
         restart: always
         environment:
