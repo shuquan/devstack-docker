@@ -15,9 +15,9 @@ GLANCE_PUBLIC_URL=http://image:9292
 NOVA_ADMIN_URL=http://nova:8774/v2.1/%\(tenant_id\)s
 NOVA_INTERNAL_URL=http://nova:8774/v2.1/%\(tenant_id\)s
 NOVA_PUBLIC_URL=http://nova:8774/v2.1/%\(tenant_id\)s
-NEUTRON_ADMIN_URL=http://neutron:9696
-NEUTRON_INTERNAL_URL=http://neutron:9696
-NEUTRON_PUBLIC_URL=http://neutron:9696
+NEUTRON_ADMIN_URL=http://network:9696
+NEUTRON_INTERNAL_URL=http://network:9696
+NEUTRON_PUBLIC_URL=http://network:9696
 REGION=RegionOne
 
 export OS_TOKEN=ADMIN_TOKEN

@@ -89,7 +89,7 @@ services:
         environment:
             RABBITMQ_DEFAULT_USER: nova
             RABBITMQ_DEFAULT_PASS: password
-    neutron:
+    network:
         build: ./neutron
         image: openstack/neutron
         privileged: true
@@ -103,12 +103,12 @@ services:
                 ipv4_address: 172.18.0.20
         restart: always
         depends_on:
-            - neutron_db
-            - neutron_rabbitmq
+            - network_db
+            - network_rabbitmq
         links:
-            - neutron_db
-            - neutron_rabbitmq
-    neutron_db:
+            - network_db
+            - network_rabbitmq
+    network_db:
         image: mysql
         restart: always
         environment:
@@ -116,7 +116,7 @@ services:
             MYSQL_DATABASE: neutron
             MYSQL_USER: neutron
             MYSQL_PASSWORD: password
-    neutron_rabbitmq:
+    network_rabbitmq:
         image: rabbitmq
         restart: always
         environment:
