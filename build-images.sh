@@ -5,3 +5,4 @@ docker build -t openstack/glance glance
 docker build -t openstack/nova nova
 docker build -t openstack/neutron neutron
 docker build -t openstack/cinder cinder
+docker build -t openstack/horizon horizon

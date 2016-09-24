@@ -52,6 +52,7 @@ services:
         privileged: true
         ports:
             - "8774:8774"
+            - "6080:6080"
         volumes:
             - ./etc/controller/nova:/etc/nova
             - ./log/controller/nova:/var/log/nova
@@ -124,3 +125,21 @@ services:
         environment:
             RABBITMQ_DEFAULT_USER: neutron
             RABBITMQ_DEFAULT_PASS: password
+    dashboard:
+        build: ./horizon
+        image: openstack/horizon
+        ports:
+            - "8080:80"
+        volumes:
+            - ./etc/dashboard/horizon:/etc/openstack-dashboard
+            - ./log/dashboard/horizon:/var/log/apache2
+        restart: always
+        depends_on:
+            - identity
+            - dashboard_memcached
+        links:
+            - identity
+            - dashboard_memcached
+    dashboard_memcached:
+        image: memcached
+        restart: always

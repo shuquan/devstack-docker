@@ -76,7 +76,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends supervisor \
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 8774
+EXPOSE 8774 6080
 
 CMD /usr/local/bin/nova-manage api_db sync \
     && /usr/local/bin/nova-manage db sync \
