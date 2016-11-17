@@ -30,7 +30,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 
 RUN mkdir -p /opt/stack \
     && cd /opt/stack \
-    && git clone https://git.openstack.org/openstack/nova
+    && git clone https://git.openstack.org/openstack/nova -b stable/newton
 
 RUN git clone https://github.com/kanaka/noVNC /usr/share/novnc
 
@@ -57,7 +57,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 
 RUN mkdir -p /opt/stack \
     && cd /opt/stack \
-    && git clone https://git.openstack.org/openstack/neutron
+    && git clone https://git.openstack.org/openstack/neutron -b stable/newton
 
 WORKDIR /opt/stack/neutron
 

@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN mkdir -p /opt/stack \
     && cd /opt/stack \
-    && git clone https://git.openstack.org/openstack/keystone
+    && git clone https://git.openstack.org/openstack/keystone -b stable/newton
 
 WORKDIR /opt/stack/keystone
 

@@ -3,7 +3,7 @@ MAINTAINER Shuquan Huang
 
 RUN mkdir -p /opt/stack \
     && cd /opt/stack \
-    && git clone https://git.openstack.org/openstack/glance
+    && git clone https://git.openstack.org/openstack/glance -b stable/newton
 
 WORKDIR /opt/stack/glance
 
